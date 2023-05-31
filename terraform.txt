@@ -1,0 +1,169 @@
+##PROVIDER:
+-----------
+provider "azurerm" {
+  features {}
+}
+
+##RESOURCE GROUP:
+-----------------
+resource "azurerm_resource_group" "rg" {
+  name     = var.resource_group.name
+  location = var.resource_group.location
+}
+
+##VIRTUAL NETWORKS:
+------------------
+resource "azurerm_virtual_network" "vnet" {
+  name                = var.virtual_network.name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = var.virtual_network.address_space
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
+}
+
+##SUBNETS:
+----------
+resource "azurerm_subnet" "sub" {
+  count                = length(var.subnet_name.name)
+  name                 = var.subnet_name.name[count.index]
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = [var.subnet_name.address_prefixes[count.index]]
+  depends_on = [
+    azurerm_virtual_network.vnet
+  ]
+}
+
+##PUBLIC-IP:
+------------
+resource "azurerm_public_ip" "pub" {
+  count = length(var.subnet_name.name)
+  name                = var.public_ip.name[count.index]
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Static"
+  depends_on = [
+    azurerm_subnet.sub
+  ]
+}  
+
+##NETWORK INTERFACE:
+--------------------
+resource "azurerm_network_interface" "nic" {
+    count = length(var.subnet_name.name)
+  name                = var.network_interface.name[count.index]
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                          = "ipconfig"
+    subnet_id                     = azurerm_subnet.sub[count.index].id
+    private_ip_address_allocation = "Dynamic"
+  }
+  depends_on = [
+    azurerm_public_ip.pub
+  ]
+}
+
+##VIRTUAL MACHINE:
+-------------------
+resource "azurerm_linux_virtual_machine" "vm" {
+  count               = length(var.subnet_name.name)
+  name                = "kittu.vm-${count.index}"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  size                = "Standard_F2"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.nic[count.index].id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+}
+
+INPUT VARIABLS:
+---------------
+variable "resource_group" {
+  type = object({
+    name     = string
+    location = string
+  })
+}
+
+variable "virtual_network" {
+  type = object({
+    name          = string
+    address_space = list(string)
+  })
+}
+
+variable "subnet_name" {
+  type = object({
+    name             = list(string)
+    address_prefixes = list(string)
+  })
+}
+
+variable "network_interface" {
+  type = object({
+    name = list(string)
+  })
+}
+
+variable "public_ip" {
+  type = object({
+    name = list(string)
+  })
+}
+
+##DEV.TFVARS:
+-------------
+resource_group = {
+  location = "centralindia"
+  name     = "kittu.rg"
+}
+
+virtual_network = {
+  address_space = ["10.0.0.0/16"]
+  name          = "kittu.vnet"
+}
+
+subnet_name = {
+  address_prefixes = ["10.0.1.0/24", "10.0.2.0/24"]
+  name             = ["kittu1", "kittu2"]
+}
+
+network_interface = {
+  name = ["nic1", "nic2"] 
+}
+
+public_ip = {
+  name = ["pubip1", "pubip2"]
+}
+
+##RUNNING COMMAND:
+------------------
+$ az login
+$ terraform init
+$ terraform plan
+$ terraform validate
+$ terraform apply -var-file="dev.tfvars" (or) terraform apply
+$ terraform destroy -var-file="dev.tfvars" (or) terraform destroy
+

@@ -1,0 +1,15 @@
+[Unit]
+Description=Apache web server
+
+
+[Service]
+WorkingDirectory=/home/Ruchi
+ExecStart=/usr/bin/java -jar spring-petclinic-3.0.0-SNAPSHOT.jar
+
+Restart=always
+RestartSec=10
+Type=notify
+
+[Install]
+WantedBy=default.target
+RequiredBy=network.target

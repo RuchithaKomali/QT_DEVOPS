@@ -1,0 +1,44 @@
+##pods:
+-------
+go to "kubernetes API reference docs"
+https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#containerport-v1-core
+
+* create a new folder --> open vs-code
+* create file with ".yml" extension in that folder
+* start writing yml file to manifest the desired state by following "k8s ref docs"
+
+##k8s-pods:
+-----------
+now we are writing pods through yml file in vs-code
+---
+apiVersion: v1 (or) app/v1
+kind: Pod
+metadata: 
+  name: k8s
+  labels:
+    environment: master
+    app: nginx
+spec:
+  containers:
+   - name: nginx
+     image: nginx:1
+     ports: 
+       - containerPort: 80
+	   
+##terminal:(master node)
+-------------------------
+* create a file
+$ vi <name>.yml 
+* paste that yml file in this created file
+$ kubectl apply -f <name>.yml --> to apply yml file
+$ kubectl get -f <name>.yml --> to see yml file
+$ kubectl get pods --> to see all the pods
+$ kubectl get svc --> to see all the services
+$ kubectl delete -f <name>.yml
+$ kubectl describe pods --> to see details of yml file
+$ kubectl api-resources --> to see all the resources in k8s
+$ kubectl get pods -A --> to see all the default nodes/pods
+$ kubectl get jobs
+$ kubectl delete jobs <pod-name>
+$ kubectl get po
+$ kubectl delete po <pods-id>

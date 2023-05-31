@@ -1,0 +1,30 @@
+###deamon-set:
+**************
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-agent
+  labels:
+    app: alpine
+    version: latest
+spec:
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: alpine
+      version: latest
+  template:
+    metadata:
+      name: log-agent
+      labels:
+        app: alpine
+        version: latest
+    spec:
+      containers:
+        - name: monitoring-agent-port
+          image: alpine:latest
+          command:
+            - sleep
+          args:
+            - 1d

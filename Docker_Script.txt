@@ -1,0 +1,55 @@
+Docker installation:
+
+##docker script:
+Login vm
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+
+##usermod
+sudo usermod -aG docker <username>
+docker info
+you should get errors
+
+##exit and relogin
+docker info
+This command should not give any errors
+
+docker container run -d -P nginx:1.22
+
+docker container ls
+
+docker container exec
+
+docker container exec -it <container-name> /bin/bash
+exit
+
+mkdir <folder-name>
+cd <folder-name>/
+
+vi Dockerfile
+
+docker image build -t <folder-name>:<tag name> .
+docker image ls
+docker container run --name -p 
+
+docker image inspect <folder-name>:<tag>
+
+$ docker container rm -f $(docker container ls -a -q)
+
+$ docker image rm -f $(docker image ls -a)
+
+Docker image build:
+-------------------
+First clone the code
+--> $ git clone <url> 
+--> $ cd <packagename>
+
+Second build the image
+--> $ docker image build -t <imagename>:<tag> .
+--> $ docker image list
+
+Third push the image into DockerHub
+--> $ docker image tag <imagename>:<tag> <dockerhub-username>/<imagename>:<tag>
+--> $ docker image list
+--> $ docker login ## enter username and password {ruchithakomali:ruchikomali@25}
+--> $ docker image push <dockerhub-username>/<imagename> ## {refresh and will get image}

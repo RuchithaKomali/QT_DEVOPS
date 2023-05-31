@@ -1,0 +1,7 @@
+ git config --global user.email sairuchithakomali@gmail.com
+ git config --global user.name "RuchithaKomali"
+ git commit -m "demo"
+ git remote add origin https://github.com/RuchithaKomali/ruchi.git
+ git add .
+ git commit -m "added changes"
+ git push -u origin master

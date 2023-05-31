@@ -1,0 +1,39 @@
+Manual steps:-
+------------
+##login vm in linux
+clone the spring pet clinic code from git
+--> copy code
+$ git clone https://github.com/spring-projects/spring-petclinic.git
+$ cd spring-petclinic/
+$ apt update
+$ apt install openjdk-11-jdk -y
+$ wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+$ java -jar spring-petclinic-2.4.2.jar
+--> copy ip addrs:<port-8080>
+-------------------------------------------------------------------------------------------------
+
+Docker Container(ubuntu):-
+-------------------------
+## login into vm
+$ vi Dockerfile
+FROM ubuntu:22.04 
+RUN apt update
+RUN apt install openjdk-11-jdk wget -y
+RUN wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+EXPOSE 8080        
+CMD ["java", "-jar", "/spring-petclinic-2.4.2.jar"]
+$ docker image build -t <name>:<version> .
+--> copy ip addrs:<port>
+---------------------------------------------------------------------------------------------------
+
+Docker Container(openjdk-11-jdk):-
+---------------------------------
+## login into vm
+$ vi Dockerfile
+FROM openjdk:11
+RUN apt update
+RUN  wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+EXPOSE 8080
+CMD ["java", "-jar", "/spring-petclinic-2.4.2.jar"]
+$ docker image build -t <name>:<version> .
+--> copy ip addrs:<port>

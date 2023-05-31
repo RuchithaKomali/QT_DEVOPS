@@ -1,0 +1,7 @@
+### Handlers in ansible:
+------------------------
+https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html#handlers
+
+Examples:
+---------
+https://www.cherryservers.com/blog/how-to-define-and-use-handlers-in-ansible-playbooks#:~:text=Handlers%20are%20usually%20used%20to,when%20no%20change%20is%20made.

@@ -1,0 +1,40 @@
+Azure cli:
+----------
+https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-cli
+
+az group create --name adsa --location eastus 
+
+az storage account create --name naveenpdp  --resource-group adsa --location eastus --sku Standard_ZRS --encryption-services blob --access-tier Hot 
+
+az storage container create --account-name naveenpdp --name ansible --public-access blob
+ 
+az storage blob upload --account-name naveenpdp --container-name ansible --file /home/Ruchi/spring-petclinic/target/spring-petclinic-3.0.0-SNAPSHOT.jar
+
+/home/Ruchi/myagent/_work/2/s/target/spring-petclinic-3.0.0-SNAPSHOT.jar
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+java versions: 
+
+java8= /usr/lib/jvm/java-8-openjdk-amd64/bin
+java11 = /usr/lib/jvm/java-11-openjdk-amd64/bin 
+
+path sets on nodes:
+temp--  export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"  
+PERM--  /etc/mnbvc x
+
+
+RuchiKomali
+ruchikomali@25
+
+
+sonar   squ_45238bcd66d0f7aa60301c16cd8f9cbecb03ea38
+
+
+rqqhfg2od63iawclgcsmff3cq6thj7fdaf46nxjey3325wsv726a
+https://dev.azure.com/nagarajumajji65/
+
+https://teams.microsoft.com/l/meetup-join/19%3aX1dF7gCvOAJn4_txLOhGpIOMUodbYGQ29iOEH8RhQG81%40thread.tacv2/1678183375067?context=%7b%22Tid%22%3a%22d4a878a0-a17f-4cd1-b20f-608d06be9a6b%22%2c%22Oid%22%3a%22da582bc8-fe72-4bec-a3a1-af72604ace7f%22%7d
+
+https://teams.microsoft.com/l/meetup-join/19%3aJkqCX0pR0pLreEbPA2mnduFVXtsmtGge1jyoMUv[…]2c%22Oid%22%3a%2290016df8-6fee-4692-ba6c-b287706561cc%22%7d

@@ -1,0 +1,29 @@
+###HAPROXY:
+-----------
+    1  clear
+    2  sudo apt update
+    3  sudo apt install -y haproxy
+    4  sudo systemctl status haproxy
+    5  sudo apt install -y haproxy
+    6  sudo systemctl status haproxy
+    7  sudo nano /etc/haproxy/haproxy.cfg
+    8  sudo systemctl status apache2
+    9  sudo systemctl restart haproxy
+   10  sudo systemctl status haproxy
+   
+conditions:
+-----------
+ vi demo --> 
+
+[web]
+10.2.0.5
+
+[app]
+10.2.0.6
+
+when condition:
+---------------
+  when: 
+    - ansible_facts["nodename"] == "ControlNode"
+
+$ ansible -m setup -i hosts <servers-name>

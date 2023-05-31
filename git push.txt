@@ -1,0 +1,12 @@
+ cd <file-path> --> ls
+ git init --> install git (hiddenfile .git)
+ git status --> shows all untracked files
+ git add <file-name> or add . --> all tracked files
+ git commit -m "<any name>"
+ git log --> shows commited files in master folder
+ git remote add <any name> https://github.com/RuchithaKomali/K8s.git
+ git push <given name> master
+ git branch --> it shows branchs
+ git branch -a --> it shows all the branch
+ git clone <remote-url>
+ git checkout <branch>

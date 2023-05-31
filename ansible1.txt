@@ -1,0 +1,75 @@
+ vi hosts
+ 
+  ansible -i hosts -m ping -k all
+  
+error: 
+  10.2.0.5 | FAILED! => {
+    "msg": "Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support this.  Please add this host's fingerprint to your known_hosts file to manage this host."
+}
+
+export ANSIBLE_HOST_KEY_CHECKING=False 
+
+ansible -i hosts -m ping -k all
+
+ ssh-keygen
+ 
+  ssh-copy-id Devops@10.2.0.5
+  
+  ssh 10.2.0.5
+  
+   exit
+   
+    ansible -i hosts -m ping all
+
+
+task-1
+------
+sudo apt update
+sudo apt install apache2
+sudo apt install php
+libapache2-mod-php php-mysql
+  sudo nano /var/www/html/info.php
+  <?php
+  phpinfo();
+  ?>
+Commands:
+---------
+   
+   vi Task1.yml
+   ansible-playbook -i hosts Task1.yml 
+-----------------------------------------------------
+###PlayBook:
+------------
+
+---
+  - name: install apache2 and php
+    hosts: all
+    become: yes
+    tasks:
+      - name: update ubuntu
+        ansible.builtin.apt:
+            update_cache: yes
+            state: present
+      - name: install apache2
+        ansible.builtin.apt:
+            name: apache2
+            update_cache: yes
+            state: present
+      - name: install php
+        ansible.builtin.apt:
+            name:
+              - php
+              - libapache2-mod-php
+              - php-mysql
+            update_cache: yes
+            state: present
+      - name: Copy file into nano path
+        ansible.builtin.copy:
+            content:
+              '<?php
+              php info();
+              ?>'
+            dest: /var/www/html/info.php
+			
+src: home/<file>/
+dest: etc/systemd/system/<service-file>

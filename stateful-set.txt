@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: my-stateful
+  labels:
+    app: nginx
+    version: latest
+  namespace: default
+spec:
+  serviceName: nginx
+  minReadySeconds: 3
+  replicas: 4
+  selector: 
+    matchLabels:
+       app: nginx
+       version: latest
+  template:
+    metadata:
+       name: my-stateful
+       labels:
+         app: nginx
+         version: latest
+       namespace: defaultn
+    spec:
+      containers:
+        - name: my-nginx
+          image: nginx
+          ports:
+            - name: web
+              containerPort: 80
+              protocol: TCP
+          volumeMounts: 
+            - name: stateful-set-volmnt
+              mountPath: /var/www/html
+  volumeClaimTemplates:
+    - apiVersion: vi 
+      kind: PersistentVolumeClaim
+      metadata: 
+        name: stateful-set-volmnt
+      spec:
+        accessModes: 
+          - ReadWriteOnce
+        storageClassName: managed-premium
+        resources:
+          requests:
+            storage: 1Gi
+          limits: 
+            storage: 8Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-stateful
+  labels:
+    app: nginx
+    version: latest
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None

@@ -1,0 +1,139 @@
+Task-2:
+-------
+    1  sudo apt update
+    2  sudo apt install openjdk-11-jdk -y
+    3  java --version
+    4  sudo apt install curl wget
+    5  WILDFLY_RELEASE=$(curl -s https://api.github.com/repos/wildfly/wildfly/releases/latest|grep tag_name|cut -d '"' -f 4)
+    6  wget https://github.com/wildfly/wildfly/releases/download/${WILDFLY_RELEASE}/wildfly-${WILDFLY_RELEASE}.tar.gz
+    7  tar xvf wildfly-${WILDFLY_RELEASE}.tar.gz
+    8  sudo mv wildfly-${WILDFLY_RELEASE} /opt/wildfly
+    9  sudo groupadd --system wildfly
+   10  sudo useradd -s /sbin/nologin --system -d /opt/wildfly  -g wildfly wildfly
+   11  sudo mkdir /etc/wildfly
+   12  sudo cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf /etc/wildfly/
+   13  sudo cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service /etc/systemd/system/
+   14  sudo cp /opt/wildfly/docs/contrib/scripts/systemd/launch.sh /opt/wildfly/bin/
+   15  sudo chmod +x /opt/wildfly/bin/launch.sh
+   16  sudo chown -R wildfly:wildfly /opt/wildfly
+   17  sudo systemctl daemon-reload
+   18  sudo systemctl daemon-reload
+   19  sudo systemctl enable wildfly
+   20  sudo systemctl status wildfly
+  
+  
+wildfly-27.0.1.Final
+
+81  sudo apt update (apt in ansible)
+   82  sudo apt install openjdk-11-jdk -y
+   84  sudo apt install curl wget
+   86  wget https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-27.0.1.Final.tar.gz (wget in ansible)
+   87  tar xvf wildfly-27.0.1.Final.tar.gz
+   88  sudo mv wildfly-27.0.1.Final /opt/wildfly
+   89  sudo groupadd --system wildfly
+   90  sudo useradd -s /sbin/nologin --system -d /opt/wildfly -g wildfly wildfly 
+   91  sudo mkdir /etc/wildfly
+   92  sudo cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf /etc/wildfly/
+   93  sudo cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service /etc/systemd/system/
+   94  sudo cp /opt/wildfly/docs/contrib/scripts/systemd/launch.sh /opt/wildfly/bin/
+   95  sudo chmod +x /opt/wildfly/bin/launch.sh
+   96  sudo chown -R wildfly:wildfly /opt/wildfly
+   97  sudo systemctl daemon-reload
+   98  sudo systemctl start wildfly
+   99  sudo systemctl enable wildfly
+  100  sudo systemctl status wildfly
+-----------------------------------------------------------------------------
+###PlayBook:
+------------
+
+---
+  - name: install WildFly 
+    hosts: all
+    become: yes
+    tasks:
+      - name: update ubuntu
+        ansible.builtin.apt:
+            update_cache: yes
+            state: present
+      - name: install JDK
+        ansible.builtin.apt:
+          name: openjdk-11-jdk
+          state: present
+      - name: install curl
+        ansible.builtin.apt:
+          name:
+            - curl
+            - wget
+          state: present
+      - name: WILDFLY_RELEASE
+        ansible.builtin.get_url:
+          url: https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-27.0.1.Final.tar.gz
+          dest: /tmp/
+          mode: '0777'
+      - name: mkdir wildfly
+        ansible.builtin.file:
+          path: /opt/wildfly
+          state: directory
+      - name: Untar 'wildfly-27.0.1.Final.tar.gz'
+        ansible.builtin.unarchive:
+          src: /tmp/wildfly-27.0.1.Final.tar.gz
+          dest: /opt/wildfly
+          mode: '0777'
+          remote_src: true
+      - name: groupadd
+        ansible.builtin.group:
+          name: wildfly
+          system: true
+          state: present
+      - name: useradd
+        ansible.builtin.user:
+          name: wildfly 
+          shell: /sbin/nologin
+          system: true
+          home: /opt/wildfly
+          group: wildfly
+      - name: /etc/wildfly
+        ansible.builtin.file:
+          path: /etc/wildFly
+          state: directory
+      - name: files copy
+        ansible.builtin.copy:
+          src: /opt/wildfly/wildfly-27.0.1.Final/
+          dest: /opt/wildfly/ 
+          remote_src: true  
+      - name: copy file
+        ansible.builtin.copy:
+          src: /opt/wildfly/wildfly-27.0.1.Final/docs/contrib/scripts/systemd/wildfly.conf
+          dest: /etc/wildfly/
+          remote_src: true
+      - name: copy file
+        ansible.builtin.copy:
+          src: /opt/wildfly/wildfly-27.0.1.Final/docs/contrib/scripts/systemd/wildfly.service
+          dest: /etc/systemd/system/
+          remote_src: true
+      - name: copy file
+        ansible.builtin.copy:
+          src: /opt/wildfly/wildfly-27.0.1.Final/docs/contrib/scripts/systemd/launch.sh
+          dest: /opt/wildfly/bin/
+          remote_src: true
+      - name: chmod1
+        ansible.builtin.file:
+          path: /opt/wildfly/bin/launch.sh
+          mode: "+x"
+      - name: chmod2
+        ansible.builtin.file:
+          path: /opt/wildfly
+          owner: wildfly
+          group: wildfly
+          recurse: true
+      - name: deamon-reload
+        ansible.builtin.systemd:
+          daemon_reload: true
+      - name: start wildfly
+        ansible.builtin.systemd:
+          name: wildfly
+          state: started
+      - name: enable wildfly
+        ansible.builtin.systemd:
+          name: wildfly
+          enabled: true

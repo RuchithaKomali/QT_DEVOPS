@@ -1,0 +1,26 @@
+### dotnet: 20.168.25.153
+--------------------------
+ManualSteps:
+   73  sudo apt update
+   74  wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+   75  sudo dpkg -i packages-microsoft-prod.deb
+   76  sudo apt install apt-transport-https
+   77  sudo apt update
+   78  sudo apt install dotnet-sdk-6.0
+   79  sudo apt install apt-transport-https
+   80  sudo apt update
+   81  sudo apt install dotnet-runtime-6.0
+   82  dotnet --version
+   
+### spring pet-clinic http://20.164.216.176:8080/
+-------------------------------------------------
+clone spring pet-clinic from git repo
+sudo apt update
+sudo apt install openjdk-17-jdk -y
+sudo apt install maven -y
+cd .. springpetclinic.packages
+mvn packages
+check on browser with ip:8080 
+
+### nopcommerces
+----------------

@@ -1,0 +1,65 @@
+## jenkins
+-----------
+ sudo apt update
+  sudo apt install openjdk-11-jdk -y
+   sudo apt install wget -y
+    wget https://updates.jenkins.io/download/war/2.385/jenkins.war
+	 sudo vi /lib/systemd/system/jenkins.service
+
+[Unit]
+Description=Manage Java service jenkins
+
+[Service]
+Environment="JAVA HOME=/usr/lib/jvm/java-11-openjdk-amd64"
+WorkingDirectory=/home/Devops
+ExecStart=java -jar jenkins.war
+Type=simple
+Restart=on-failure
+RestartSec=10
+
+ sudo systemctl start jenkins.service
+  sudo systemctl status jenkins.service
+   sudo systemctl enable jenkins.service
+   
+   
+- name: install jenkins on ubuntu
+  hosts: all
+  become: yes
+  tasks:
+    - name: update ubuntu
+      ansible.builtin.apt:
+        state: present
+        update_cache: true
+    - name: install openjdk-11-jdk
+      ansible.builtin.apt:
+        name: openjdk-11-jdk
+        state: present
+    - name: url
+      ansible.builtin.get_url:
+        dest: /tmp
+        url: https://updates.jenkins.io/download/war/2.385/jenkins.war
+        mode: '0777'
+    - name: copy file
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/jenkins.service
+        src: ./jenkins.service
+        remote_src: true
+        mode: "0777"
+    - name: start jenkins
+      ansible.builtin.systemd:
+        name: jenkins
+        state: started
+    - name: enable jenkins
+      ansible.builtin.systemd:
+        name: jenkins
+        enabled: true
+
+[Unit]
+Description=Manage Java service jenkins
+[Service]
+Environment="JAVA HOME=/usr/lib/jvm/java-11-openjdk-amd64"
+WorkingDirectory=/tmp
+ExecStart=java -jar jenkins.war
+Type=simple
+Restart=on-failure
+RestartSec=10

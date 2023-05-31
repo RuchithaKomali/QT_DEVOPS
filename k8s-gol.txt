@@ -1,0 +1,50 @@
+###Game Of Life:
+****************
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-gol
+  labels:
+    app: gol 
+spec:
+  minReadySeconds: 3
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gol
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: 
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      name: my-gol
+      labels:
+        app: gol
+    spec:
+      containers:
+        - name: gol
+          image: 9052171017/gol1:1.0
+          ports:
+            - name: my-gol-port
+              containerPort: 8080
+              protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-gol
+  labels:
+    app: gol 
+spec:
+   type: LoadBalancer
+   selector:
+     app: gol
+   ports:
+     - name: my-gol-port
+       port: 35000
+       targetPort: 8080
+       protocol: TCP

@@ -1,0 +1,71 @@
+iqpdmegwsedvc2bgugbtimsp2zk2oopm6gjjyktxei7aya75fcgq
+
+https://dev.azure.com/sairuchithakomali/
+
+variables:
+  JAVA_HOME_11_X64: /usr/lib/jvm/java-11-openjdk-amd64
+  
+maven version:
+--------------
+docs: https://linuxhint.com/install_apache_maven_ubuntu/
+  
+  
+ssh Ruchi@20.195.201.3
+
+---
+  - name: installation java on ubuntu
+    hosts: all
+    become: true
+    tasks: 
+      - name: apt update
+        apt:
+          state: present
+          update_cache: true
+      - name: install java
+        apt:
+          name: openjdk-11-jdk
+          state: present
+		  
+---
+pool: Pipeline
+
+trigger: 
+  - main
+
+stages:
+  - stage: build
+    jobs: 
+      - job: runplaybook
+        steps:
+          script: | 
+            ansible-playbook -i /home/Ruchi/myagent/_work/2/s/hosts /home/Ruchi/myagent/_work/2/s/java.yml
+
+
+
+
+
+
+steps:
+  - script: ansible-playbook -i /home/Ruchi/myagent/_work/2/s/hosts /home/Ruchi/myagent/_work/2/s/java.yml
+  
+  
+---
+pool: bookmyshow
+
+trigger:
+  - main
+
+stages:
+  - stage: movie1
+    jobs: 
+      - job: bookingticket1
+        steps:
+          - script:  
+              echo shersha
+  - stage: movie2
+    jobs:
+      - job: bookingticket2
+        steps: 
+          - script:
+              echo major
+
